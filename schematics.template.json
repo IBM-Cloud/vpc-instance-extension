@@ -30,6 +30,12 @@
             "secure": false,
             "value": $TF_VAR_ssh_key_name,
             "type": "string"
+          },
+          {
+            "name": "instance_count",
+            "secure": false,
+            "value": $TF_VAR_instance_count,
+            "type": "string"
           }
         ]
       }
