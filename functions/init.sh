@@ -26,8 +26,9 @@ zip -r functions.zip virtualenv __main__.py helper.py
 echo ">>> Creating or updating the action..."
 ibmcloud fn action update vpc-resource-automation functions.zip \
 --kind python:3.7 \
+--param IAM_API_KEY ${IAM_API_KEY} \
 --web true \
---param IAM_API_KEY ${IAM_API_KEY}
+--web-secure true
 
 echo ">>> Web URL of the action..."
 ibmcloud fn action get vpc-resource-automation --url

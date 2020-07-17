@@ -1,3 +1,5 @@
 .env
 functions/virtualenv
 *.zip
+*.tfvars
+schematics.json

@@ -6,13 +6,19 @@
     "description": "vpc for flow logs",
     "template_repo": {
       "url": "https://github.com/IBM-Cloud/vpc-tutorials",
-      "branch": "master"
+      "branch": "vsi"
     },
     "template_data": [
       {
-        "folder": "vpc-one-vsi/tf",
+        "folder": "vpc-vsi/tf",
         "type": "terraform_v0.12",
         "variablestore": [
+          {
+            "name": "vpc_name",
+            "secure": false,
+            "value": $TF_VAR_basename,
+            "type": "string"
+          },
           {
             "name": "basename",
             "secure": false,
@@ -20,7 +26,7 @@
             "type": "string"
           },
           {
-            "name": "ssh_key_name",
+            "name": "ssh_keyname",
             "secure": false,
             "value": $TF_VAR_ssh_key_name,
             "type": "string"
