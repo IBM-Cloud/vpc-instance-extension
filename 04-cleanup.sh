@@ -15,11 +15,11 @@ echo ">>> Deleting Cloud functions resources..."
 ibmcloud fn action delete vpc-instance-extension
 
 NAMESPACE=$PREFIX-actions
-ibmcloud fn namespace delete $NAMESPACE
+ibmcloud fn namespace delete $NAMESPACE 
 
 # Resource authorizations:
 echo '>>> Removing ${AT_ACCESS_GROUP_NAME} access group along with policies and users'
-ibmcloud iam access-group-delete ${AT_ACCESS_GROUP_NAME}
+ibmcloud iam access-group-delete ${AT_ACCESS_GROUP_NAME} --force
 
 # Services
 echo ">>> Deleting Cloud services..."
