@@ -12,7 +12,7 @@ fi
 
 echo ">>> Deleting Cloud functions resources..."
 # Cloud Functions
-ibmcloud fn action delete vpc-resource-automation
+ibmcloud fn action delete vpc-instance-extension
 
 NAMESPACE=$PREFIX-actions
 ibmcloud fn namespace delete $NAMESPACE

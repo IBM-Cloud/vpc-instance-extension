@@ -41,6 +41,13 @@ else
   ibmcloud plugin install schematics
 fi
 
+echo ">>> Checking whether Docker is installed and running"
+if docker ps >/dev/null; then
+  echo "Docker is installed and running..."
+else
+  echo "Install and start Docker..."
+fi
+
 echo ">>> Is jq (https://stedolan.github.io/jq/) installed?"
 jq -V
 

@@ -1,10 +1,3 @@
-echo ">>> Checking whether Docker is installed and running"
-if docker ps >/dev/null; then
-  echo "Docker is installed and running..."
-else
-  echo "Install and start Docker..."
-fi
-
 echo ">>> Pulling Docker Python image"
 docker pull ibmfunctions/action-python-v3.7
 
@@ -24,11 +17,14 @@ echo ">>> Zip the actions and the virtualenv..."
 zip -r functions.zip virtualenv __main__.py helper.py
 
 echo ">>> Creating or updating the action..."
-ibmcloud fn action update vpc-resource-automation functions.zip \
+ibmcloud fn action update vpc-instance-extension functions.zip \
 --kind python:3.7 \
 --param IAM_API_KEY ${IAM_API_KEY} \
 --web true \
 --web-secure true
 
 echo ">>> Web URL of the action..."
-ibmcloud fn action get vpc-resource-automation --url
+ibmcloud fn action get vpc-instance-extension --url
+
+echo ">>> Copy the value of the key 'require-whisk-auth'"
+ibmcloud fn action get vpc-instance-extension
