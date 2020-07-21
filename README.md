@@ -47,7 +47,7 @@ In this section, you will provision the IBM Cloud service required for this use-
    ```sh
    ./01-services.sh
    ```
-2. The script provisions IBM Cloud Activity Tracker with LogDNA service, creates an access group, adds the required policies and adds the users to the access group. *Every user that accesses the IBM Cloud Activity Tracker with LogDNA service in your account must be assigned an access policy with an IAM user role defined.*
+2. The script provisions a IBM Cloud Activity Tracker with LogDNA service with 7-day event search plan, creates an access group, adds the required policies and adds the users to the access group. *Every user that accesses the IBM Cloud Activity Tracker with LogDNA service in your account must be assigned an access policy with an IAM user role defined.*
 
 You will configure the Activity Tracker with LogDNA service to look for VPC specific events in the coming sections.
 
@@ -85,12 +85,12 @@ In this section, you will create a LogDNA view and an alert from the view. Views
 1. Navigate to [IBM Cloud Observability](https://cloud.ibm.com/observe) page and click **Activity Tracker** on the left pane.
 2. Click on **View LogDNA** next to the service you provisioned. A new tab will be launched with default **Everything** view.
 3. In the search box, enter `action:is.instance.instance.create  reason.reasonType:Created` and click **Enter/Return** on your keyboard. *You are filtering for a successful VSI (instance) create event from the logs.*
-4. On the top bar, click on **Unsaved view** and then **save as new view /alert**
+4. On the top bar, click on **Unsaved View** and then **Save as new view / alert**
    - Provide `instance-extension` as the name
-   - Select `View-specific` from the Alert dropdown menu
+   - Select `View-specific alert` from the Alert dropdown menu
    - Click on **Webhook**
 5. Under **Method & URL**, next to `POST` enter the web action URL you saved earlier.
-6. Under **Headers**, in the first box, enter `X-Require-Whisk-Auth` as the key and the value(number) that you saved earlier in the second box and then click **Add**.
+6. Under **Headers**, in the first box, enter `X-Require-Whisk-Auth` as the key and the `require-whisk-auth` value(number) that you saved earlier in the second box and then click **Add**.
    ![](images/webhook_logdna.png)
 7. Under **Body**, copy and paste the following JSON. Once done, click on **validate JSON**
    ```json
@@ -100,7 +100,7 @@ In this section, you will create a LogDNA view and an alert from the view. Views
 	"lines": "{{ lines }}"
    }
    ```
-8. To verify, click on **Test** next to the title(Webhook). *Before hitting test, you may want to open your terminal or command prompt and run `ibmcloud fn activation poll` command to check for incoming activations*
+8. To verify, click on **Test** next to the title(Webhook). *Before hitting test, you may want to open your terminal or command prompt and run `ibmcloud fn activation poll` command to check logs for incoming activations*
 9. To see the logs of your last invoked action, open a terminal or command prompt and run the below command
     ```sh
     ibmcloud fn activation logs $(ibmcloud fn activation list | awk 'FNR == 2 {print $3}')
@@ -113,7 +113,7 @@ In this section, you will create a LogDNA view and an alert from the view. Views
 	 'matches': '2',
 	 'sentFrom': 'logDNA'
     ```
-10. Click on **Save View**. The view should appear on the left pane under Views (Click on the **LogDNA** logo).*Don't close this browser or tab*
+10. Click on **Save View**. The view should appear on the left pane under Views.*Don't close this browser or tab*
 
 ### Test the flow by provisioning VPC resources
 
@@ -138,11 +138,12 @@ In this section, you will test the complete flow by provisioning VSIs in a VPC
    ```sh
    ibmcloud fn activation logs $(ibmcloud fn activation list | awk 'FNR == 2 {print $3}')
    ```
-5. To provision more VSIs, update the `TF_VAR_instance_count` variable in the `.env` file, source the `.env` and re-run the `03-vpc.sh` script.
+5. Re-run the `ibmcloud is instances` command to see the VSIs with floating IPs.
+6. To provision more VSIs, update the `TF_VAR_instance_count` variable in the `.env` file, source the `.env` and re-run the `03-vpc.sh` script.
 
 ### Cleanup
 
-Run the below script to cleanup everything,
+Run the below script to delete everything,
 
 ```sh
 ./04-cleanup.sh

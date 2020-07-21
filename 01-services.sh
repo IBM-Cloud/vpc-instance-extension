@@ -13,7 +13,7 @@ if ibmcloud resource service-instance ${AT_LOGDNA_SERVICE_NAME} > /dev/null 2>&1
   echo "Activity Tracker with LogDNA service ${AT_LOGDNA_SERVICE_NAME} already exists"
 else
   echo "Creating Activity Tracker with LogDNA service..."
-  ibmcloud resource service-instance-create ${AT_LOGDNA_SERVICE_NAME} logdnaat lite ${REGION} || exit 1
+  ibmcloud resource service-instance-create ${AT_LOGDNA_SERVICE_NAME} logdnaat 7-day ${REGION} || exit 1
 fi
 
 echo ">>> Creating access group, adding policies and users..."
