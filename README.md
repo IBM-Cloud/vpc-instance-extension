@@ -1,5 +1,4 @@
 # Extend VPC resources with Cloud Functions and Activity tracker with LogDNA
-:warning: Work in progress
 
 You can use the IBM Cloud Activity Tracker with LogDNA service to track how users and applications interact with IBM Cloud Virtual Private Cloud (VPC).
 
@@ -91,7 +90,6 @@ In this section, you will create a LogDNA view and an alert from the view. Views
    - Click on **Webhook**
 5. Under **Method & URL**, next to `POST` enter the web action URL you saved earlier.
 6. Under **Headers**, in the first box, enter `X-Require-Whisk-Auth` as the key and the `require-whisk-auth` value(number) that you saved earlier in the second box and then click **Add**.
-   ![](images/webhook_logdna.png)
 7. Under **Body**, copy and paste the following JSON. Once done, click on **validate JSON**
    ```json
    {
