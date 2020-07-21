@@ -7,7 +7,7 @@ You can use the IBM Cloud Activity Tracker with LogDNA service to track how user
 
 With [IBM Cloud Functions](https://cloud.ibm.com/functions/), you can use your favorite programming language to write lightweight code that runs app logic in a scalable way. You can run code on-demand with HTTP-based API requests from applications or run code in response to IBM Cloud services and third-party events. The Function-as-a-Service (FaaS) programming platform is based on the open source project Apache OpenWhisk. **A web action is accessible through a REST interface without the need for credentials.**
 
-Bringing the alerting about the actions capability of Activity tracker and web actions in Cloud functions, you will be reserving a floating IP as and when a new VSI is provisioned in the VPC.
+Bringing the alerting about the actions capability of Activity tracker and web actions in Cloud functions, you will be reserving a floating IP as and when a new VSI (instance) is provisioned in the VPC.
 
 ![](images/Extend_vpc.png)
 
@@ -70,7 +70,7 @@ In this section, you will create
       * [init.sh](./functions/init.sh)
       * [requirements.txt](./functions/requirements.txt)
 
-   The script internally calls another script `init.sh` that pulls `ibmfunctions/action-python-v3.7` container image, installs the dependencies mentioned in `requirements.txt` and creates a virtual environment(virtualenv). Once done, the code in `.py` files along with the created virtualenv is zipped and a Python action is created using the `functions.zip` file.
+   The python(.py) files use [vpc-python-sdk](https://github.com/IBM/vpc-python-sdk) to create and bind a floating IP to an instance. The script internally calls another script `init.sh` that pulls `ibmfunctions/action-python-v3.7` container image, installs the dependencies mentioned in `requirements.txt` and creates a virtual environment(virtualenv). Once done, the code in `.py` files along with the created virtualenv is zipped and a Python action is created using the `functions.zip` file.
 
    This is one of the many ways to [package your Python code](https://cloud.ibm.com/docs/openwhisk?topic=openwhisk-prep#prep_python).
 
@@ -100,6 +100,7 @@ In this section, you will create a LogDNA view and an alert from the view. Views
 	"lines": "{{ lines }}"
    }
    ```
+   The `matches` include number of logs matching the query in the search filter. The `lines` include details of an instance like instance ID that will be passed to the Python action. Using this info, the action reserves a floating IP to the instance.
 8. To verify, click on **Test** next to the title(Webhook). *Before hitting test, you may want to open your terminal or command prompt and run `ibmcloud fn activation poll` command to check logs for incoming activations*
 9. To see the logs of your last invoked action, open a terminal or command prompt and run the below command
     ```sh
