@@ -87,7 +87,8 @@ In this section, you will create a LogDNA view and an alert from the view. Views
 1. Navigate to [IBM Cloud Observability](https://cloud.ibm.com/observe) page and click **Activity Tracker** on the left pane.
 2. Click on **View LogDNA** next to the service you provisioned. A new tab will be launched with default **Everything** view.
 3. In the search box, enter `action:is.instance.instance.create  reason.reasonType:Created` and click **Enter/Return** on your keyboard. *You are filtering for a successful VSI (instance) create event from the logs.*
-   :warning: If you want to reserve floating IPs to the VSIs created for this use-case, use the **PREFIX** (check `.env` or run 'echo $PREFIX') before the search query above. It should look something like `vpc-instance-extension action:is.instance.instance.create  reason.reasonType:Created`. If you don't use the PREFIX, **all** the newly provisioned VSIs will have floating IPs reserved.
+
+   :warning: If you want to reserve floating IPs only to the VSIs created for this use-case, use the **PREFIX** (check `.env` or run 'echo $PREFIX') before the search query above. It should look something like `vpc-instance-extension action:is.instance.instance.create  reason.reasonType:Created`. If you don't use the PREFIX, **all** the newly provisioned VSIs will have floating IPs auto-reserved.
 4. On the top bar, click on **Unsaved View** and then **Save as new view / alert**
    - Provide `instance-extension` as the name
    - Select `View-specific alert` from the Alert dropdown menu
