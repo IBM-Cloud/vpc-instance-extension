@@ -1,7 +1,6 @@
 from ibm_vpc import VpcV1
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from ibm_cloud_sdk_core import ApiException
-import os
 from json import JSONDecoder
 
 service = None
@@ -66,7 +65,6 @@ def get_floating_ip_id(fip_name,zone):
         #print("KEYS",floating_ip.keys())
         if key not in floating_ip:
             unassigned_fip_List.append(floating_ip['id'])
-        continue
         #print(floating_ip['id'], "\t",  floating_ip['name'])
     #print("UNASSIGNED:",unassigned_fip_List)
     if not unassigned_fip_List:
