@@ -9,25 +9,29 @@ set -e
 set -o pipefail
 
 echo ">>> Creating Activity Tracker with LogDNA cloud service..."
-if ibmcloud resource service-instance ${AT_LOGDNA_SERVICE_NAME} > /dev/null 2>&1; then
-  echo "Activity Tracker with LogDNA service ${AT_LOGDNA_SERVICE_NAME} already exists"
+if ibmcloud resource service-instance "${AT_LOGDNA_SERVICE_NAME}" > /dev/null 2>&1; then
+  echo "Activity Tracker with LogDNA service "${AT_LOGDNA_SERVICE_NAME}" already exists"
 else
   echo "Creating Activity Tracker with LogDNA service..."
-  ibmcloud resource service-instance-create ${AT_LOGDNA_SERVICE_NAME} logdnaat 7-day ${REGION} || exit 1
+  ibmcloud resource service-instance-create "${AT_LOGDNA_SERVICE_NAME}" logdnaat 7-day ${REGION} || exit 1
 fi
 
-echo ">>> Creating access group, adding policies and users..."
-AT_ID=$(ibmcloud iam access-group-create ${AT_ACCESS_GROUP_NAME} \
---description "For VPC events logged into LogDNA" --output json | jq -r '.id')
-if [[ -n "${AT_ID}" ]]; then
-  echo ">>> Access group successfully created..."
-  echo "Creating access group policy..."
-  ibmcloud iam access-group-policy-create ${AT_ACCESS_GROUP_NAME} \
-   --service-name logdnaat \
-   --roles Administrator,Manager \
-   --resource-group-name ${RESOURCE_GROUP_NAME}
-  echo ">>> Adding user(s) to the access group"
-  ibmcloud iam access-group-user-add ${AT_ACCESS_GROUP_NAME} ${AG_USER1}
+echo ">>> Checking whether an access group with required policies exists"
+if ibmcloud iam access-group ${AT_ACCESS_GROUP_NAME} > /dev/null; then
+   echo "Access group with required policies exists"
 else
-  echo "Access group creation failed"
+  AT_ID=$(ibmcloud iam access-group-create ${AT_ACCESS_GROUP_NAME} \
+   --description "For VPC events logged into LogDNA" --output json | jq -r '.id')
+   if [[ -n "${AT_ID}" ]]; then
+      echo ">>> Access group successfully created..."
+      echo "Creating access group policy..."
+      ibmcloud iam access-group-policy-create ${AT_ACCESS_GROUP_NAME} \
+      --service-name logdnaat \
+      --roles Administrator,Manager \
+      --resource-group-name ${RESOURCE_GROUP_NAME}
+      echo ">>> Adding user(s) to the access group"
+      ibmcloud iam access-group-user-add ${AT_ACCESS_GROUP_NAME} ${AG_USER1}
+    else
+      echo "Access group creation failed"
+    fi
 fi

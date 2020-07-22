@@ -66,9 +66,9 @@ def get_floating_ip_id(fip_name,zone):
         #print("KEYS",floating_ip.keys())
         if key not in floating_ip:
             unassigned_fip_List.append(floating_ip['id'])
+        continue
         #print(floating_ip['id'], "\t",  floating_ip['name'])
-    # print("UNASSIGNED:",unassigned_fip_List)
-    floating_ip_id=unassigned_fip_List[0]
+    #print("UNASSIGNED:",unassigned_fip_List)
     if not unassigned_fip_List:
         zone_identity_model = {}
         zone_identity_model['name'] = zone
@@ -93,15 +93,17 @@ def get_floating_ip_id(fip_name,zone):
             print("Create Floating IP failed with status code " +
                 str(e.code) + ": " + e.message)
         floating_ip_id=ip['id']
-        #print(ip['id'])
+    else:
+        floating_ip_id=unassigned_fip_List[0]    
+    
+    print("A floating IP is created with an id:",floating_ip_id)
     return floating_ip_id
 
 # Reserve the floating IP to the provisioned instance
 def add_instance_floating_ip(instance_id, network_interface_id,zone):
     # Reserve a floating IP
-    print(network_interface_id.split('-')[-1]+"-floating-ip")
-    floating_ip_id=get_floating_ip_id(network_interface_id.split('-')[-1]+"-floating-ip",zone)
-    print(floating_ip_id)
+    floating_ip_id=get_floating_ip_id(instance_id.split('-')[-1]+"-floating-ip",zone)
+    #print("Floating IP name:",instance_id.split('-')[-1]+"-floating-ip")
     try:
         response = service.add_instance_network_interface_floating_ip(
         instance_id=instance_id,
@@ -121,7 +123,7 @@ def get_instance_id(dict):
             instance_Id=result['_app'][result['_app'].find('instance:')+9:]
             instance_Id=instance_Id.replace(" ","")
             zone=result['_app'].split(':')[5]
-            print("instance ID is",instance_Id)
+            print("The instance ID is",instance_Id)
             network_interface_id=get_network_interface_id(instance_Id)
             response=add_instance_floating_ip(instance_Id,network_interface_id,zone)
             #print("FIP attached RESPONSE",response)

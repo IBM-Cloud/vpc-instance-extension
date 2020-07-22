@@ -23,5 +23,5 @@ ibmcloud iam access-group-delete ${AT_ACCESS_GROUP_NAME} --force
 
 # Services
 echo ">>> Deleting Cloud services..."
-AT_LOGDNA_INSTANCE_ID=$(ibmcloud resource service-instance --output JSON ${AT_LOGDNA_SERVICE_NAME} | jq -r .[0].id)
+AT_LOGDNA_INSTANCE_ID=$(ibmcloud resource service-instance --output JSON "${AT_LOGDNA_SERVICE_NAME}" | jq -r .[0].id)
 ibmcloud resource service-instance-delete ${AT_LOGDNA_INSTANCE_ID} --force --recursive

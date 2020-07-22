@@ -37,7 +37,7 @@ With [IBM Cloud Functions](https://cloud.ibm.com/functions/), you can use your f
     | Cloud Functions(fn) plugin                                    | create namespace, actions and for checking the logs |
     | Schematics plugin                                         | provision VPC resources                             |
 
-    Additionally, checks and installs tools like Docker and jq.
+    Additionally, the script checks and installs tools like Docker and jq.
 
 ### Provision the Cloud service
 
@@ -70,7 +70,9 @@ In this section, you will create
       * [init.sh](./functions/init.sh)
       * [requirements.txt](./functions/requirements.txt)
 
-   The python(.py) files use [vpc-python-sdk](https://github.com/IBM/vpc-python-sdk) to create and bind a floating IP to an instance. The script internally calls another script `init.sh` that pulls `ibmfunctions/action-python-v3.7` container image, installs the dependencies mentioned in `requirements.txt` and creates a virtual environment(virtualenv). Once done, the code in `.py` files along with the created virtualenv is zipped and a Python action is created using the `functions.zip` file.
+   The python(.py) files use [vpc-python-sdk](https://github.com/IBM/vpc-python-sdk) to check for existing unbound Floating IPs, create a new floating IPs if there are none and reserve an existing or new floating IP to an instance.
+
+   The script internally calls another script `init.sh` that pulls `ibmfunctions/action-python-v3.7` container image, installs the dependencies mentioned in `requirements.txt` and creates a virtual environment(virtualenv) using the pulled container image. Once done, the code in `.py` files along with the created virtualenv is zipped and a Python action is created using the `functions.zip` file.
 
    This is one of the many ways to [package your Python code](https://cloud.ibm.com/docs/openwhisk?topic=openwhisk-prep#prep_python).
 
@@ -85,6 +87,7 @@ In this section, you will create a LogDNA view and an alert from the view. Views
 1. Navigate to [IBM Cloud Observability](https://cloud.ibm.com/observe) page and click **Activity Tracker** on the left pane.
 2. Click on **View LogDNA** next to the service you provisioned. A new tab will be launched with default **Everything** view.
 3. In the search box, enter `action:is.instance.instance.create  reason.reasonType:Created` and click **Enter/Return** on your keyboard. *You are filtering for a successful VSI (instance) create event from the logs.*
+   :warning: If you want to reserve floating IPs to the VSIs created for this use-case, use the **PREFIX** (check `.env` or run 'echo $PREFIX') before the search query above. It should look something like `vpc-instance-extension action:is.instance.instance.create  reason.reasonType:Created`. If you don't use the PREFIX, **all** the newly provisioned VSIs will have floating IPs reserved.
 4. On the top bar, click on **Unsaved View** and then **Save as new view / alert**
    - Provide `instance-extension` as the name
    - Select `View-specific alert` from the Alert dropdown menu
