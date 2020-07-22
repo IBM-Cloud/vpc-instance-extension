@@ -1,19 +1,30 @@
 # Extend VPC resources with Cloud Functions and Activity tracker with LogDNA
 
-You can use the IBM Cloud Activity Tracker with LogDNA service to track how users and applications interact with IBM Cloud Virtual Private Cloud (VPC).
+By bringing the alerting about the Cloud events capability of IBM Cloud Activity tracker with LogDNA service and web actions in IBM Cloud functions together, you will be reserving a floating IP as and when a new VSI (instance) is provisioned in a VPC.
 
-[IBM Cloud Activity Tracker with LogDNA](https://cloud.ibm.com/docs/Activity-Tracker-with-LogDNA?topic=Activity-Tracker-with-LogDNA-getting-started) records user-initiated activities that change the state of a service in IBM Cloud. You can use this service to investigate abnormal activity and critical actions and to comply with regulatory audit requirements. **In addition, you can be alerted about actions as they happen.**
+- You will use the IBM Cloud Activity Tracker with LogDNA service to track how users and applications interact with IBM Cloud Virtual Private Cloud (VPC).
+- You will create a view and an alert on Activity Tracker with LogDNA filtering VSI creation logs.
+- The logs are then passed to Cloud functions Python action as JSON. The action then  reserves a floating IP to the newly provisioned VSI(instance) using the instance ID in the passed JSON.
 
-With [IBM Cloud Functions](https://cloud.ibm.com/functions/), you can use your favorite programming language to write lightweight code that runs app logic in a scalable way. You can run code on-demand with HTTP-based API requests from applications or run code in response to IBM Cloud services and third-party events. The Function-as-a-Service (FaaS) programming platform is based on the open source project Apache OpenWhisk. **A web action is accessible through a REST interface without the need for credentials.**
+[IBM Cloud Activity Tracker with LogDNA](https://cloud.ibm.com/docs/Activity-Tracker-with-LogDNA?topic=Activity-Tracker-with-LogDNA-getting-started) records user-initiated activities that change the state of a service in IBM Cloud. **In addition, you can be alerted about actions as they happen.**
 
-Bringing the alerting about the actions capability of Activity tracker and web actions in Cloud functions, you will be reserving a floating IP as and when a new VSI (instance) is provisioned in the VPC.
+With [IBM Cloud Functions](https://cloud.ibm.com/functions/), you can use your favorite programming language to write lightweight code that runs app logic in a scalable way. You can run code on-demand with HTTP-based API requests from applications or run code in response to IBM Cloud services and third-party events. **A web action is accessible through a REST interface without the need for credentials.**
 
 ![](images/Extend_vpc.png)
 
 ### Pre-requisites
 
 1. Install IBM Cloud CLI by following the [instructions here](https://cloud.ibm.com/docs/cli?topic=cli-install-ibmcloud-cli) and log into your IBM Cloud account with `ibmcloud login` command
-2. Run the below script to setup the required prerequisites for this use-case,
+2. Copy the configuration file and set the values to match your environment. *Check the comments above each environment variable for more information*
+   ```sh
+   cp .env.template .env
+   edit .env
+   ```
+3. Load the values into the current shell
+   ```sh
+   source .env
+   ```
+4. Run the below script to setup the required prerequisites for this use-case,
 
     ```sh
     ./00-prereqs.sh
@@ -26,17 +37,7 @@ Bringing the alerting about the actions capability of Activity tracker and web a
     | Cloud Functions(fn) plugin                                    | create namespace, actions and for checking the logs |
     | Schematics plugin                                         | provision VPC resources                             |
 
-    Other tools like Docker and jq.
-
-3. Copy the configuration file and set the values to match your environment. *Check the comments above each environment variable for more information*
-   ```sh
-   cp .env.template .env
-   edit .env
-   ```
-4. Load the values into the current shell
-   ```sh
-   source .env
-   ```
+    Additionally, checks and installs tools like Docker and jq.
 
 ### Provision the Cloud service
 
@@ -46,7 +47,7 @@ In this section, you will provision the IBM Cloud service required for this use-
    ```sh
    ./01-services.sh
    ```
-2. The script provisions a IBM Cloud Activity Tracker with LogDNA service with 7-day event search plan, creates an access group, adds the required policies and adds the users to the access group. *Every user that accesses the IBM Cloud Activity Tracker with LogDNA service in your account must be assigned an access policy with an IAM user role defined.*
+2. The script checks whether there is an IBM Cloud Activity Tracker with LogDNA service with 7-day event search plan in your account and provisions if there is none, creates an access group, adds the required policies and adds the users to the access group. *Every user that accesses the IBM Cloud Activity Tracker with LogDNA service in your account must be assigned an access policy with an IAM user role defined.*
 
 You will configure the Activity Tracker with LogDNA service to look for VPC specific events in the coming sections.
 
