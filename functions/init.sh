@@ -1,13 +1,6 @@
 echo ">>> Pulling Docker Python image"
 docker pull ibmfunctions/action-python-v3.7
 
-echo ">>> Checking whether PIP is installed"
-if pip install --upgrade pip >/dev/null; then
-  echo "pip is installed and upgraded..."
-else
-  echo "Install pip for downloading required Python packages..."
-fi
-
 echo ">>> Install dependencies and create a virtual environment using Docker..."
 docker run --rm -v "$PWD:/tmp" ibmfunctions/action-python-v3.7 bash -c \
 "cd /tmp && virtualenv virtualenv && source virtualenv/bin/activate \
@@ -15,16 +8,3 @@ docker run --rm -v "$PWD:/tmp" ibmfunctions/action-python-v3.7 bash -c \
 
 echo ">>> Zip the actions and the virtualenv..."
 zip -r functions.zip virtualenv __main__.py helper.py
-
-echo ">>> Creating or updating the action..."
-ibmcloud fn action update vpc-instance-extension functions.zip \
---kind python:3.7 \
---param IAM_API_KEY ${IAM_API_KEY} \
---web true \
---web-secure true
-
-echo ">>> Web URL of the action..."
-ibmcloud fn action get vpc-instance-extension --url
-
-echo ">>> Copy the value of the key 'require-whisk-auth'"
-ibmcloud fn action get vpc-instance-extension
