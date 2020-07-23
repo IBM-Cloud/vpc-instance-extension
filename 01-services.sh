@@ -8,12 +8,27 @@
 set -e
 set -o pipefail
 
-echo ">>> Creating Activity Tracker with LogDNA cloud service..."
-if ibmcloud resource service-instance "${AT_LOGDNA_SERVICE_NAME}" -g "${AT_LOGDNA_RESOURCE_GROUP_NAME}" > /dev/null 2>&1; then
-  echo "Activity Tracker with LogDNA service "${AT_LOGDNA_SERVICE_NAME}" already exists"
+echo ">>> Checking whether an Activity Tracker with LogDNA cloud service exists..."
+RESOURCE_NAME=$(ibmcloud resource service-instances --service-name logdnaat --all-resource-groups --output JSON | jq -r '.[].name')
+if [[ -n "${RESOURCE_NAME}" ]]; then
+    echo "Activity Tracker with LogDNA service already exists in one of the resource groups of ${REGION} region"
+    SERVICE_PLAN=$(ibmcloud resource service-instance "${RESOURCE_NAME}" | grep "^Service Plan Name" | awk -F":" '{ print $2 }' | sed 's/ //g')
+    if [[ "${SERVICE_PLAN}" == "lite" ]]; then
+      echo "### This sample requires a 7-day log retention PAID plan at minimum. The current log retention service plan is 'Lite'."
+      echo "### Upgrade to a 7 day search PAID plan through the UI or run the command 'ibmcloud resource service-instance-update "${RESOURCE_NAME}" --service-plan-id 9aae7491-5cb6-43eb-9b7a-3e0456c781f0 -p \"{\"default_receiver\": true}\"'"
+      echo "Once upgraded, re-run this script to create access group and attached policies"
+      exit
+    fi
 else
-  echo "Creating Activity Tracker with LogDNA service..."
-  ibmcloud resource service-instance-create "${AT_LOGDNA_SERVICE_NAME}" logdnaat 7-day ${REGION} -g "${AT_LOGDNA_RESOURCE_GROUP_NAME}" || exit 1
+  echo "This sample requires a Activity Tracker with LogDNA service with 7-day log retention PAID plan..."
+  while true; do
+    read -p "Do you wish to create the service in "${AT_LOGDNA_SERVICE_NAME}" group?" yn
+    case $yn in
+        [Yy]* ) ibmcloud resource service-instance-create "${AT_LOGDNA_SERVICE_NAME}" logdnaat 7-day ${REGION} -g "${AT_LOGDNA_RESOURCE_GROUP_NAME}" ; break;;
+        [Nn]* ) exit;;
+        * ) echo "Please answer yes or no.";;
+    esac
+ done
 fi
 
 echo ">>> Checking whether an access group with required policies exists"

@@ -16,7 +16,7 @@ else
   echo 'creating schematics workspace'
   workspace_id=$(ibmcloud schematics workspace new --file schematics.json --output json | jq -r '.id')
 fi
-poll_for_latest_action_to_finish $workspace_id
+poll_for_latest_action_to_finish $workspace_id "workspace creation"
 
 echo basename = "\"$TF_VAR_basename\"" >> schematics.tfvars
 echo vpc_name = "\"$TF_VAR_basename\"" >> schematics.tfvars
@@ -25,4 +25,4 @@ echo instance_count = "\"$TF_VAR_instance_count\"" >> schematics.tfvars
 
 echo '>>> schematics apply'
 ibmcloud schematics apply --id $workspace_id --var-file schematics.tfvars -f
-poll_for_latest_action_to_finish $workspace_id
+poll_for_latest_action_to_finish $workspace_id "VPC resource creation"

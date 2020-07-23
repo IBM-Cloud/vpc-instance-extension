@@ -5,7 +5,7 @@ source ./shared.sh
 echo ">>> Deleting Schematics workspace..."
 if workspace_id=$(get_workspace_id); then
   ibmcloud schematics destroy --id $workspace_id -f
-  poll_for_latest_action_to_finish $workspace_id
+  poll_for_latest_action_to_finish $workspace_id "workspace deletion"
   ibmcloud schematics workspace delete --id $workspace_id -f
 fi
 

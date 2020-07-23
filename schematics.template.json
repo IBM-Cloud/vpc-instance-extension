@@ -3,7 +3,7 @@
     "type": [
       "terraform_v0.12"
     ],
-    "description": "vpc for flow logs",
+    "description": "vpc for instance extension",
     "template_repo": {
       "url": "https://github.com/IBM-Cloud/vpc-tutorials",
       "branch": "vsi"

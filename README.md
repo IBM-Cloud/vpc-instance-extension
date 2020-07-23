@@ -1,6 +1,6 @@
 # Extend VPC resources with Cloud Functions and Activity tracker with LogDNA
 
-By bringing the alerting about the Cloud events capability of IBM Cloud Activity tracker with LogDNA service and web actions in IBM Cloud functions together, you will be reserving a floating IP as and when a new VSI (instance) is provisioned in a VPC.
+This sample shows how to automatically assign a floating IP to a newly created VSI by monitoring Activity Tracker events and using Cloud Functions to interact with the VPC API.
 
 - You will use the IBM Cloud Activity Tracker with LogDNA service to track how users and applications interact with IBM Cloud Virtual Private Cloud (VPC).
 - You will create a view and an alert on Activity Tracker with LogDNA filtering VSI creation logs.
@@ -15,16 +15,22 @@ With [IBM Cloud Functions](https://cloud.ibm.com/functions/), you can use your f
 ### Pre-requisites
 
 1. Install IBM Cloud CLI by following the [instructions here](https://cloud.ibm.com/docs/cli?topic=cli-install-ibmcloud-cli) and log into your IBM Cloud account with `ibmcloud login` command
-2. Copy the configuration file and set the values to match your environment. *Check the comments above each environment variable for more information*
+2. Clone this repo and move to the cloned folder
+   ```sh
+   git clone https://github.ibm.com/portfolio-solutions/vpc-instance-extension
+   cd vpc-instance-extension
+   ```
+3. Copy the configuration file and set the values to match your environment. *Check the comments above each environment variable for more information*
    ```sh
    cp .env.template .env
    edit .env
    ```
-3. Load the values into the current shell
+   Provide the `IAM_API_KEY` of the user who will be executing the scripts as the resources will be created under their user account.
+4. Load the values into the current shell
    ```sh
    source .env
    ```
-4. Run the below script to setup the required prerequisites for this use-case,
+5. Run the below script to setup the required prerequisites for this use-case,
 
     ```sh
     ./00-prereqs.sh
@@ -37,7 +43,7 @@ With [IBM Cloud Functions](https://cloud.ibm.com/functions/), you can use your f
     | Cloud Functions(fn) plugin                                    | create namespace, actions and for checking the logs |
     | Schematics plugin                                         | provision VPC resources                             |
 
-    Additionally, the script checks and installs tools like Docker and jq.
+    Additionally, the script checks for tools like Docker and jq.
 
 ### Provision the Cloud service
 
@@ -47,7 +53,7 @@ In this section, you will provision the IBM Cloud service required for this use-
    ```sh
    ./01-services.sh
    ```
-2. The script checks whether there is an IBM Cloud Activity Tracker with LogDNA service with 7-day event search plan in your account and provisions if there is none, creates an access group, adds the required policies and adds the users to the access group. *Every user that accesses the IBM Cloud Activity Tracker with LogDNA service in your account must be assigned an access policy with an IAM user role defined.*
+2. The script checks whether there is an IBM Cloud Activity Tracker with LogDNA service with 7-day event search **paid** plan in your account. If there is none, it asks your permission to provision one with a paid plan. You may have to re-run the script to create an access group, add the required policies and add the users to the access group. *Every user that accesses the IBM Cloud Activity Tracker with LogDNA service in your account must be assigned an access policy with an IAM user role defined.* Add the email IDs of the users associated with IBM Cloud account to the `.env` file and source the file.
 
 You will configure the Activity Tracker with LogDNA service to look for VPC specific events in the coming sections.
 
