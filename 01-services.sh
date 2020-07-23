@@ -9,11 +9,11 @@ set -e
 set -o pipefail
 
 echo ">>> Creating Activity Tracker with LogDNA cloud service..."
-if ibmcloud resource service-instance "${AT_LOGDNA_SERVICE_NAME}" > /dev/null 2>&1; then
+if ibmcloud resource service-instance "${AT_LOGDNA_SERVICE_NAME}" -g "${AT_LOGDNA_RESOURCE_GROUP_NAME}" > /dev/null 2>&1; then
   echo "Activity Tracker with LogDNA service "${AT_LOGDNA_SERVICE_NAME}" already exists"
 else
   echo "Creating Activity Tracker with LogDNA service..."
-  ibmcloud resource service-instance-create "${AT_LOGDNA_SERVICE_NAME}" logdnaat 7-day ${REGION} || exit 1
+  ibmcloud resource service-instance-create "${AT_LOGDNA_SERVICE_NAME}" logdnaat 7-day ${REGION} -g "${AT_LOGDNA_RESOURCE_GROUP_NAME}" || exit 1
 fi
 
 echo ">>> Checking whether an access group with required policies exists"
@@ -28,7 +28,7 @@ else
       ibmcloud iam access-group-policy-create ${AT_ACCESS_GROUP_NAME} \
       --service-name logdnaat \
       --roles Administrator,Manager \
-      --resource-group-name ${RESOURCE_GROUP_NAME}
+      --resource-group-name ${AT_LOGDNA_RESOURCE_GROUP_NAME}
       echo ">>> Adding user(s) to the access group"
       ibmcloud iam access-group-user-add ${AT_ACCESS_GROUP_NAME} ${AG_USER1}
     else
