@@ -153,8 +153,9 @@ In this section, you will test the complete flow by provisioning VSIs in a VPC
 
 ### Cleanup
 
-Run the below script to delete everything,
+Run the below script to delete everything you created for this sample except the Activity tracker with LogDNA service as only one service is allowed per region. If you wish to delete, you can delete it from [IBM Cloud resource list](https://cloud.ibm.com/resources),
 
 ```sh
 ./04-cleanup.sh
 ```
+
