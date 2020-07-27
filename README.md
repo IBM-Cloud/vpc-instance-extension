@@ -53,7 +53,7 @@ In this section, you will provision the IBM Cloud service required for this use-
    ```sh
    ./01-services.sh
    ```
-2. The script checks whether there is an IBM Cloud Activity Tracker with LogDNA service with 7-day event search **paid** plan in your account. If there is none, it asks your permission to provision one with a paid plan. You may have to re-run the script to create an access group, add the required policies and add the users to the access group. *Every user that accesses the IBM Cloud Activity Tracker with LogDNA service in your account must be assigned an access policy with an IAM user role defined.* Add the email IDs of the users associated with IBM Cloud account to the `.env` file and source the file.
+2. The script checks whether there is an IBM Cloud Activity Tracker with LogDNA service with 7-day event search **paid** plan in your account. If there is none, it asks your permission to provision one with a paid plan. You may have to re-run the script to create an access group, add the required policies and add the users to the access group. *Every user that accesses the IBM Cloud Activity Tracker with LogDNA service in your account must be assigned an access policy with an IAM user role defined.* Add the email IDs of the users associated with IBM Cloud account to the `.env` file and source the file. If you are an **admin**, you don't have to create an access group.
 
 You will configure the Activity Tracker with LogDNA service to look for VPC specific events in the coming sections.
 
