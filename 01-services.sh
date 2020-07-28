@@ -22,7 +22,7 @@ if [[ -n "${RESOURCE_NAME}" ]]; then
 else
   echo "This sample requires a Activity Tracker with LogDNA service with 7-day log retention PAID plan..."
   while true; do
-    read -p "Do you wish to create the service in "${AT_LOGDNA_SERVICE_NAME}" group?" yn
+    read -p "You must have an activity tracker with LogDNA service to successfully complete this example, would you like to create one?" yn
     case $yn in
         [Yy]* ) ibmcloud resource service-instance-create "${AT_LOGDNA_SERVICE_NAME}" logdnaat 7-day ${REGION} -g "${AT_LOGDNA_RESOURCE_GROUP_NAME}" ; break;;
         [Nn]* ) exit;;

@@ -6,9 +6,9 @@ This sample shows how to automatically assign a floating IP to a newly created V
 - You will create a view and an alert on Activity Tracker with LogDNA filtering VSI creation logs.
 - The logs are then passed to Cloud functions Python action as JSON. The action then  reserves a floating IP to the newly provisioned VSI(instance) using the instance ID in the passed JSON.
 
-[IBM Cloud Activity Tracker with LogDNA](https://cloud.ibm.com/docs/Activity-Tracker-with-LogDNA?topic=Activity-Tracker-with-LogDNA-getting-started) records user-initiated activities that change the state of a service in IBM Cloud. **In addition, you can be alerted about actions as they happen.**
+[IBM Cloud Activity Tracker with LogDNA](https://cloud.ibm.com/docs/Activity-Tracker-with-LogDNA?topic=Activity-Tracker-with-LogDNA-getting-started) records user-initiated activities that change the state of a service in IBM Cloud. **In addition, you can be alerted about events as they happen.** In simply words, the services logs lines associated with changes(events) to the cloud and alerts on matching log lines.
 
-With [IBM Cloud Functions](https://cloud.ibm.com/functions/), you can use your favorite programming language to write lightweight code that runs app logic in a scalable way. You can run code on-demand with HTTP-based API requests from applications or run code in response to IBM Cloud services and third-party events. **A web action is accessible through a REST interface without the need for credentials.**
+With [IBM Cloud Functions](https://cloud.ibm.com/functions/), you can use your favorite programming language to write lightweight code that runs app logic in a scalable way. You can run code in response to IBM Cloud services and third-party events. **A web action is accessible through a REST interface without the need for credentials.**
 
 ![](images/Extend_vpc.png)
 
@@ -20,12 +20,12 @@ With [IBM Cloud Functions](https://cloud.ibm.com/functions/), you can use your f
    git clone https://github.ibm.com/portfolio-solutions/vpc-instance-extension
    cd vpc-instance-extension
    ```
-3. Copy the configuration file and set the values to match your environment. *Check the comments above each environment variable for more information*
+3. Copy the configuration file and set the values to match your environment. *Check the comments above each environment variable for more information*.
    ```sh
    cp .env.template .env
    edit .env
    ```
-   Provide the `IAM_API_KEY` of the user who will be executing the scripts as the resources will be created under their user account.
+   You need to set values for all the environment variables. Provide the `IAM_API_KEY` of the user who will be executing the scripts as the resources will be created under their user account.
 4. Load the values into the current shell
    ```sh
    source .env
@@ -153,7 +153,7 @@ In this section, you will test the complete flow by provisioning VSIs in a VPC
 
 ### Cleanup
 
-Run the below script to delete everything you created for this sample except the Activity tracker with LogDNA service as only one service is allowed per region. If you wish to delete, you can delete it from [IBM Cloud resource list](https://cloud.ibm.com/resources),
+Run the below script to delete everything you created for this sample except the Activity tracker with LogDNA service as only one service is allowed per region. If you wish to delete the service, you can delete it from [IBM Cloud resource list](https://cloud.ibm.com/resources),
 
 ```sh
 ./04-cleanup.sh
