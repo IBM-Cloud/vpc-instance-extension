@@ -159,3 +159,7 @@ Run the below script to delete everything you created for this sample except the
 ./04-cleanup.sh
 ```
 
+### What's next?
+
+- Use this example with the VPC solution tutorials [available here](https://cloud.ibm.com/docs/solution-tutorials?topic=solution-tutorials-tutorials#tutorials).
+- Check the [companion scripts](https://github.com/IBM-Cloud/vpc-tutorials)
