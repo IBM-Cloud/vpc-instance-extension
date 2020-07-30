@@ -17,7 +17,7 @@ With [IBM Cloud Functions](https://cloud.ibm.com/functions/), you can use your f
 1. Install IBM Cloud CLI by following the [instructions here](https://cloud.ibm.com/docs/cli?topic=cli-install-ibmcloud-cli) and log into your IBM Cloud account with `ibmcloud login` command
 2. Clone this repo and move to the cloned folder
    ```sh
-   git clone https://github.ibm.com/portfolio-solutions/vpc-instance-extension
+   git clone https://github.com/IBM-Cloud/vpc-instance-extension
    cd vpc-instance-extension
    ```
 3. Copy the configuration file and set the values to match your environment. *Check the comments above each environment variable for more information*.
