@@ -139,6 +139,9 @@ In this section, you will test the complete flow by provisioning VSIs in a VPC
    - two VSIs as mentioned in your `.env` file
 
    The script uses [Schematics](https://cloud.ibm.com/schematics/overview) to provision the VPC resources. With Schematics, You can enable Infrastructure as Code (IaC) by codifying your IBM Cloud resources with Terraform and use Schematics workspaces to start automating the provisioning and management of your resources.
+   
+   The script internally creates `schematics.json` from [schematics.template.json](https://github.com/IBM-Cloud/vpc-instance-extension/blob/master/schematics.template.json) and passes the file with the schematics CLI command.
+   
 2. Run the below command to see the VSIs **without** floating IPs assigned
    ```sh
    ibmcloud is instances
