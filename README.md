@@ -1,12 +1,12 @@
-# Extend VPC resources with Cloud Functions and Activity tracker with LogDNA
+# Extend VPC resources with Cloud Functions and Cloud Activity tracker 
 
 This sample shows how to automatically assign a floating IP to a newly created VSI by monitoring Activity Tracker events and using Cloud Functions to interact with the VPC API.
 
-- You will use the IBM Cloud Activity Tracker with LogDNA service to track how users and applications interact with IBM Cloud Virtual Private Cloud (VPC).
-- You will create a view and an alert on Activity Tracker with LogDNA filtering VSI creation logs.
+- You will use the IBM Cloud Activity Tracker service to track how users and applications interact with IBM Cloud Virtual Private Cloud (VPC).
+- You will create a view and an alert on Activity Tracker  filtering VSI creation logs.
 - The logs are then passed to Cloud functions Python action as JSON. The action then  reserves a floating IP to the newly provisioned VSI(instance) using the instance ID in the passed JSON.
 
-[IBM Cloud Activity Tracker with LogDNA](https://cloud.ibm.com/docs/Activity-Tracker-with-LogDNA?topic=Activity-Tracker-with-LogDNA-getting-started) records user-initiated activities that change the state of a service in IBM Cloud. **In addition, you can be alerted about events as they happen.** In simply words, the services logs lines associated with changes(events) to the cloud and alerts on matching log lines.
+[IBM Cloud Activity Tracker](https://cloud.ibm.com/docs/activity-tracker?topic=activity-tracker-getting-started) records user-initiated activities that change the state of a service in IBM Cloud. **In addition, you can be alerted about events as they happen.** In simply words, the services logs lines associated with changes(events) to the cloud and alerts on matching log lines.
 
 With [IBM Cloud Functions](https://cloud.ibm.com/functions/), you can use your favorite programming language to write lightweight code that runs app logic in a scalable way. You can run code in response to IBM Cloud services and third-party events. **A web action is accessible through a REST interface without the need for credentials.**
 
@@ -53,9 +53,9 @@ In this section, you will provision the IBM Cloud service required for this use-
    ```sh
    ./01-services.sh
    ```
-2. The script checks whether there is an IBM Cloud Activity Tracker with LogDNA service with 7-day event search **paid** plan in your account. If there is none, it asks your permission to provision one with a paid plan. You may have to re-run the script to create an access group, add the required policies and add the users to the access group. *Every user that accesses the IBM Cloud Activity Tracker with LogDNA service in your account must be assigned an access policy with an IAM user role defined.* Add the email IDs of the users associated with IBM Cloud account to the `.env` file and source the file. If you are an **admin**, you don't have to create an access group.
+2. The script checks whether there is an IBM Cloud Activity Tracker  service with 7-day event search **paid** plan in your account. If there is none, it asks your permission to provision one with a paid plan. You may have to re-run the script to create an access group, add the required policies and add the users to the access group. *Every user that accesses the IBM Cloud Activity Tracker  service in your account must be assigned an access policy with an IAM user role defined.* Add the email IDs of the users associated with IBM Cloud account to the `.env` file and source the file. If you are an **admin**, you don't have to create an access group.
 
-You will configure the Activity Tracker with LogDNA service to look for VPC specific events in the coming sections.
+You will configure the Activity Tracker  service to look for VPC specific events in the coming sections.
 
 ### Create the cloud functions action
 
@@ -82,16 +82,16 @@ In this section, you will create
 
    This is one of the many ways to [package your Python code](https://cloud.ibm.com/docs/openwhisk?topic=openwhisk-prep#prep_python).
 
-2. The script also creates a secured [web action](https://cloud.ibm.com/docs/openwhisk?topic=openwhisk-actions_web). When you create a web action, the result is a URL that can be used to trigger the action from any web app. In this case, you will use the URL in Activity tracker with LogDNA service.
+2. The script also creates a secured [web action](https://cloud.ibm.com/docs/openwhisk?topic=openwhisk-actions_web). When you create a web action, the result is a URL that can be used to trigger the action from any web app. In this case, you will use the URL in Activity tracker  service.
 
     Web actions can be invoked without authentication and can be used to implement HTTP handlers that respond with headers, statusCode, and body content of different types. Using `--web-secure` flag in the command, You can secure your web action that returns a token (number) under `require-whisk-auth` annotation. **Save the `URL` and the value of `require-whisk-auth` key (a number) from the command output or keep the terminal open**.
 
-### Configure the Activity tracker with LogDNA
+### Configure the Cloud Activity tracker
 
-In this section, you will create a LogDNA view and an alert from the view. Views are saved shortcuts to a specific set of filters and search queries. You can see the list of views in the Views pane on the left.
+In this section, you will create a view and an alert from the view. Views are saved shortcuts to a specific set of filters and search queries. You can see the list of views in the Views pane on the left.
 
 1. Navigate to [IBM Cloud Observability](https://cloud.ibm.com/observe) page and click **Activity Tracker** on the left pane.
-2. Click on **View LogDNA** next to the service you provisioned. A new tab will be launched with default **Everything** view.
+2. Click on **View IBM Log Analysis** next to the service you provisioned. A new tab will be launched with default **Everything** view.
 3. In the search box, enter `action:is.instance.instance.create  reason.reasonType:Created` and click **Enter/Return** on your keyboard. *You are filtering for a successful VSI (instance) create event from the logs.*
 
    :warning: If you want to reserve floating IPs only to the VSIs created for this use-case, use the **PREFIX** (check `.env` or run 'echo $PREFIX') before the search query above. It should look something like `vpc-instance-extension action:is.instance.instance.create  reason.reasonType:Created`. If you don't use the PREFIX, **all** the newly provisioned VSIs will have floating IPs auto-reserved.
@@ -146,7 +146,7 @@ In this section, you will test the complete flow by provisioning VSIs in a VPC
    ```sh
    ibmcloud is instances
    ```
-3. You can also confirm the instance creation by navigating to the LogDNA view `instance-extension`.
+3. You can also confirm the instance creation by navigating to the view `instance-extension`.
 4. To check whether the action invoked successfully and also to check the action logs, run the below command
    ```sh
    ibmcloud fn activation logs $(ibmcloud fn activation list | awk 'FNR == 2 {print $3}')
@@ -156,7 +156,7 @@ In this section, you will test the complete flow by provisioning VSIs in a VPC
 
 ### Cleanup
 
-Run the below script to delete everything you created for this sample except the Activity tracker with LogDNA service as only one service is allowed per region. If you wish to delete the service, you can delete it from [IBM Cloud resource list](https://cloud.ibm.com/resources),
+Run the below script to delete everything you created for this sample except the Activity tracker service as only one service is allowed per region. If you wish to delete the service, you can delete it from [IBM Cloud resource list](https://cloud.ibm.com/resources),
 
 ```sh
 ./04-cleanup.sh
